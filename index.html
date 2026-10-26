@@ -1,0 +1,398 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Большой семейный календарь 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: a wall poster — one bold headline, the whole year as 12 rows × 31 days, the method (Misogi, Kevin's Rule, habits) underneath */
+:root {
+  --paper: #fbfcff;
+  --ink: #14204a;
+  --muted: #5b6690;
+  --line: #d5dcf0;
+  --blue: #1d4fd8;
+  --weekend: #cfdcf7;
+  --cell: #ffffff;
+  --card: #f1f4fc;
+  --today: #1d4fd8;
+  --c-must: #e5483b;
+  --c-family: #f2b51c;
+  --c-health: #4fb64a;
+  --c-work: #f08a24;
+  --c-couple: #9a55c9;
+  --c-kids: #1aa6a0;
+  --on-bar: #1b1b1b;
+  --on-bar-dark: #ffffff;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1430; --ink: #e8ecff; --muted: #9aa5d0; --line: #2a3566;
+    --blue: #7ea0ff; --weekend: #1e2b5c; --cell: #131b3d; --card: #161f45; --today: #9db6ff;
+    --c-must: #f0645a; --c-family: #f5c445; --c-health: #6cc867; --c-work: #f59d45; --c-couple: #b57ee0; --c-kids: #3cc2bb;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1430; --ink: #e8ecff; --muted: #9aa5d0; --line: #2a3566;
+  --blue: #7ea0ff; --weekend: #1e2b5c; --cell: #131b3d; --card: #161f45; --today: #9db6ff;
+  --c-must: #f0645a; --c-family: #f5c445; --c-health: #6cc867; --c-work: #f59d45; --c-couple: #b57ee0; --c-kids: #3cc2bb;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+header > div { min-width: 0; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+h1 { font-family: var(--display); font-weight: 800; color: var(--blue); font-size: clamp(20px, 4.2vw, 52px); line-height: 1.05; margin: 0; overflow-wrap: anywhere; hyphens: auto; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 8px 0 0; max-width: 62ch; }
+.status { font-size: 13px; color: var(--muted); }
+.status.warn { color: var(--c-must); }
+button { font: inherit; cursor: pointer; }
+.btn { background: var(--blue); color: var(--paper); border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+.btn.danger { background: var(--c-must); color: #fff; }
+.btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .bar:focus-visible, .day:focus-visible { outline: 3px solid var(--c-family); outline-offset: 2px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 18px; height: 12px; border-radius: 2px; display: inline-block; }
+
+/* Poster grid */
+.poster { border: 2px solid var(--blue); border-radius: 6px; background: var(--cell); overflow-x: auto; }
+.poster-inner { min-width: 1080px; }
+.month { display: grid; grid-template-columns: 56px repeat(31, minmax(30px, 1fr)); border-bottom: 1px solid var(--line); position: relative; }
+.month:last-child { border-bottom: 0; }
+.mlabel { grid-column: 1; grid-row: 1 / -1; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 600; font-size: 12px; color: var(--blue); text-transform: uppercase; letter-spacing: .06em; border-right: 1px solid var(--line); background: var(--card); }
+.day { grid-row: 1 / -1; border-right: 1px solid var(--line); background: var(--cell); padding: 2px 3px; font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; min-height: 64px; border: 0; border-right: 1px solid var(--line); text-align: left; }
+.day b { font-weight: 600; }
+.day.we { background: var(--weekend); }
+.day.void { background: repeating-linear-gradient(135deg, var(--card) 0 4px, var(--cell) 4px 8px); cursor: default; }
+.day.today b { color: var(--paper); background: var(--today); border-radius: 3px; padding: 0 3px; }
+.day:hover:not(.void) { box-shadow: inset 0 0 0 2px var(--blue); }
+.bar { z-index: 1; margin: 1px 1px; border-radius: 3px; font-size: 11px; font-weight: 600; line-height: 18px; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--on-bar); border: 0; text-align: left; cursor: pointer; box-shadow: 0 1px 0 rgba(0,0,0,.15); }
+.bar.must, .bar.couple, .bar.kids { color: var(--on-bar-dark); }
+.bar.draft { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.28) 0 5px, transparent 5px 10px); }
+.must { background: var(--c-must); } .family { background: var(--c-family); } .health { background: var(--c-health); }
+.work { background: var(--c-work); } .couple { background: var(--c-couple); } .kids { background: var(--c-kids); }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* Method */
+.method { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+.card { background: var(--card); border-radius: 10px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card h2 { font-family: var(--display); font-weight: 600; font-size: 16px; margin: 0; color: var(--blue); }
+.card p.lead { margin: 0; font-size: 13px; color: var(--muted); }
+label.f { display: grid; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 500; }
+input[type=text], input[type=date], select, textarea { font: inherit; color: var(--ink); background: var(--cell); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; width: 100%; min-width: 0; }
+textarea { resize: vertical; min-height: 60px; }
+.adv { display: grid; grid-template-columns: 22px 1fr 92px; gap: 8px; align-items: center; }
+.adv input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--blue); }
+.adv.done input[type=text] { text-decoration: line-through; color: var(--muted); }
+.q { display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: center; }
+.q span, .score span { font-family: var(--display); font-size: 12px; color: var(--blue); font-weight: 600; }
+.score { display: grid; grid-template-columns: 1fr 120px 22px; gap: 10px; align-items: center; font-size: 14px; }
+.score output { font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; }
+.score input { accent-color: var(--blue); width: 100%; }
+
+/* Dialog */
+.scrim { position: fixed; inset: 0; background: rgba(10, 16, 40, .45); display: grid; place-items: center; z-index: 20; padding: 16px; }
+.dlg { background: var(--paper); border-radius: 12px; width: min(440px, 100%); padding: 20px; display: grid; gap: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.3); }
+.dlg h3 { margin: 0; font-family: var(--display); font-size: 17px; color: var(--blue); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.cats label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 5px 9px; border-radius: 99px; border: 1px solid var(--line); cursor: pointer; }
+.cats input { accent-color: var(--blue); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+.actions div { display: flex; gap: 8px; }
+.chk { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+@media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .bar { transition: filter .15s; } .bar:hover { filter: brightness(1.08); } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>БОЛЬШОЙ СЕМЕЙНЫЙ КАЛЕНДАРЬ 2027</h1>
+      <p class="sub">Весь год на одном экране. Сначала ставим красное и жёлтое — то, что не двигается, и время семьи. Всё остальное подстраивается вокруг.</p>
+    </div>
+    <div style="display:grid; gap:8px; justify-items:end">
+      <button class="btn" id="addBtn" type="button">+ Событие</button>
+      <span class="status" id="status">Подключаюсь к общему календарю…</span>
+    </div>
+  </header>
+
+  <div class="legend" id="legend"></div>
+
+  <div>
+    <div class="poster"><div class="poster-inner" id="poster"></div></div>
+    <p class="hint" style="margin-top:8px">Нажмите на день, чтобы добавить событие, или на полоску, чтобы изменить. Заштрихованные полоски — черновик, даты ещё не подтверждены. Синие клетки — выходные.</p>
+  </div>
+
+  <section class="method">
+    <div class="card">
+      <h2>Мисоги 2027</h2>
+      <p class="lead">Одно большое испытание на год: страшновато, но выполнимо. Одно общее семейное и по одному на каждого взрослого.</p>
+      <label class="f">Семейное мисоги<textarea id="m_family"></textarea></label>
+      <label class="f" id="m_a1_l">Взрослый 1<input type="text" id="m_a1"></label>
+      <label class="f" id="m_a2_l">Взрослый 2<input type="text" id="m_a2"></label>
+    </div>
+
+    <div class="card">
+      <h2>Правило Кевина: 6 приключений</h2>
+      <p class="lead">Примерно раз в два месяца что-то новое и запоминающееся. Не обязательно далеко: главное, чтобы было впервые.</p>
+      <div id="advList" style="display:grid; gap:8px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Одна привычка на квартал</h2>
+      <p class="lead">Новую привычку добавляем только когда предыдущая закрепилась.</p>
+      <div id="habitList" style="display:grid; gap:8px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Закрыть 2026</h2>
+      <p class="lead">Оцените сферы от 1 до 10 вдвоём. Две самые низкие стоит усилить в 2027.</p>
+      <div id="scoreList" style="display:grid; gap:10px"></div>
+      <p class="hint" id="lowest"></p>
+    </div>
+
+    <div class="card">
+      <h2>Кто в семье</h2>
+      <p class="lead">Имена появятся в подписях мисоги.</p>
+      <div class="row2">
+        <label class="f">Взрослый 1<input type="text" id="n_a1"></label>
+        <label class="f">Взрослый 2<input type="text" id="n_a2"></label>
+        <label class="f">Старший (3 года)<input type="text" id="n_k1"></label>
+        <label class="f">Младший (0,5 года)<input type="text" id="n_k2"></label>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <form class="dlg" id="evForm">
+    <h3 id="dlgTitle">Новое событие</h3>
+    <label class="f">Что<input type="text" id="f_title" required maxlength="80" placeholder="Например: Неделя у моря"></label>
+    <div class="row2">
+      <label class="f">С<input type="date" id="f_start" min="2027-01-01" max="2027-12-31" required></label>
+      <label class="f">По<input type="date" id="f_end" min="2027-01-01" max="2027-12-31" required></label>
+    </div>
+    <div class="cats" id="f_cats"></div>
+    <label class="chk"><input type="checkbox" id="f_draft"> Черновик, дата не подтверждена</label>
+    <label class="f">Заметка<textarea id="f_note" maxlength="400"></textarea></label>
+    <div class="actions">
+      <button class="btn danger" type="button" id="delBtn" hidden>Удалить</button>
+      <div style="margin-left:auto">
+        <button class="btn ghost" type="button" id="cancelBtn">Отмена</button>
+        <button class="btn" type="submit" id="saveBtn">Сохранить</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+const YEAR = 2027;
+const MONTHS = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
+const CATS = [
+  ["must", "Несдвигаемое: праздники, отпуск"],
+  ["family", "Семья и приключения"],
+  ["health", "Здоровье и спорт"],
+  ["work", "Работа"],
+  ["couple", "Время для двоих / личное"],
+  ["kids", "Дети: врачи, сад, прививки"],
+];
+const SCORE_AREAS = [["work","Работа"],["health","Здоровье"],["relations","Отношения"],["money","Финансы"],["joy","Радость"]];
+const DEFAULT_PLAN = {
+  names: { a1: "Взрослый 1", a2: "Взрослый 2", k1: "Старший", k2: "Младший" },
+  misogi: { family: "", a1: "", a2: "" },
+  adventures: Array.from({ length: 6 }, () => ({ title: "", month: "", done: false })),
+  habits: ["", "", "", ""],
+  scores: { work: 5, health: 5, relations: 5, money: 5, joy: 5 },
+};
+
+let db = null, events = [], plan = structuredClone(DEFAULT_PLAN), editingId = null, canWrite = true;
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+const iso = (m, d) => `${YEAR}-${pad(m + 1)}-${pad(d)}`;
+const daysIn = (m) => new Date(YEAR, m + 1, 0).getDate();
+
+function setStatus(text, warn) { const s = $("status"); s.textContent = text; s.classList.toggle("warn", !!warn); }
+
+// Legend and category picker
+$("legend").innerHTML = CATS.map(([k, n]) => `<span><i class="${k}"></i>${n}</span>`).join("") + `<span><i style="background:var(--weekend)"></i>Выходные</span>`;
+$("f_cats").innerHTML = CATS.map(([k, n], i) => `<label><input type="radio" name="cat" value="${k}" ${i === 1 ? "checked" : ""}><i class="${k}" style="width:10px;height:10px;border-radius:50%;display:inline-block"></i>${n.split(":")[0]}</label>`).join("");
+
+function renderPoster() {
+  const now = new Date();
+  const todayIso = now.getFullYear() === YEAR ? iso(now.getMonth(), now.getDate()) : "";
+  const out = [];
+  for (let m = 0; m < 12; m++) {
+    const first = iso(m, 1), last = iso(m, daysIn(m));
+    // Clip every event to this month, then stack overlapping ones into lanes
+    const segs = events
+      .filter((e) => e.start <= last && e.end >= first)
+      .map((e) => ({ e, s: e.start < first ? 1 : +e.start.slice(8), t: e.end > last ? daysIn(m) : +e.end.slice(8) }))
+      .sort((a, b) => a.s - b.s || b.t - a.t);
+    const laneEnds = [];
+    segs.forEach((g) => {
+      let lane = laneEnds.findIndex((end) => end < g.s);
+      if (lane === -1) { lane = laneEnds.length; laneEnds.push(0); }
+      laneEnds[lane] = g.t; g.lane = lane;
+    });
+    const lanes = Math.max(2, laneEnds.length);
+    let html = `<div class="month" style="grid-template-rows:18px repeat(${lanes}, 22px) 4px"><div class="mlabel">${MONTHS[m]}</div>`;
+    for (let d = 1; d <= 31; d++) {
+      if (d > daysIn(m)) { html += `<div class="day void" style="grid-column:${d + 1}" aria-hidden="true"></div>`; continue; }
+      const date = new Date(YEAR, m, d), wd = date.getDay(), we = wd === 0 || wd === 6;
+      const key = iso(m, d);
+      html += `<button type="button" class="day${we ? " we" : ""}${key === todayIso ? " today" : ""}" style="grid-column:${d + 1}" data-date="${key}" aria-label="${d} ${MONTHS[m]}"><b>${d}</b><span>${["вс","пн","вт","ср","чт","пт","сб"][wd]}</span></button>`;
+    }
+    segs.forEach((g) => {
+      const e = g.e;
+      html += `<button type="button" class="bar ${e.cat}${e.draft ? " draft" : ""}" style="grid-column:${g.s + 1} / ${g.t + 2}; grid-row:${g.lane + 2}" data-id="${e.id}" title="${esc(e.title)}${e.note ? " — " + esc(e.note) : ""}">${esc(e.title)}</button>`;
+    });
+    out.push(html + "</div>");
+  }
+  $("poster").innerHTML = out.join("");
+}
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+$("poster").addEventListener("click", (ev) => {
+  const bar = ev.target.closest(".bar");
+  if (bar) return openDialog(events.find((e) => e.id === bar.dataset.id));
+  const day = ev.target.closest(".day[data-date]");
+  if (day) openDialog(null, day.dataset.date);
+});
+$("addBtn").addEventListener("click", () => openDialog(null, iso(0, 1)));
+
+// Event dialog
+function openDialog(e, date) {
+  if (!canWrite) { setStatus("Только просмотр: у вас нет прав менять календарь", true); return; }
+  editingId = e ? e.id : null;
+  $("dlgTitle").textContent = e ? "Изменить событие" : "Новое событие";
+  $("f_title").value = e ? e.title : "";
+  $("f_start").value = e ? e.start : date;
+  $("f_end").value = e ? e.end : date;
+  $("f_note").value = e ? e.note || "" : "";
+  $("f_draft").checked = e ? !!e.draft : false;
+  document.querySelector(`input[name=cat][value=${e ? e.cat : "family"}]`).checked = true;
+  $("delBtn").hidden = !e; $("delBtn").textContent = "Удалить"; $("delBtn").dataset.armed = "";
+  $("scrim").hidden = false; $("f_title").focus();
+}
+function closeDialog() { $("scrim").hidden = true; editingId = null; }
+$("cancelBtn").addEventListener("click", closeDialog);
+$("scrim").addEventListener("click", (ev) => { if (ev.target === $("scrim")) closeDialog(); });
+document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !$("scrim").hidden) closeDialog(); });
+
+$("evForm").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  let start = $("f_start").value, end = $("f_end").value;
+  if (end < start) [start, end] = [end, start];
+  const body = { title: $("f_title").value.trim(), start, end, cat: document.querySelector("input[name=cat]:checked").value, note: $("f_note").value.trim(), draft: $("f_draft").checked };
+  if (!body.title) return;
+  const id = editingId;
+  closeDialog();
+  if (!db) { // offline fallback: keep in memory for this visit
+    const local = { id: id || "local-" + Date.now(), ...body };
+    events = events.filter((x) => x.id !== local.id).concat(local); renderPoster(); return;
+  }
+  try {
+    if (id) await db.collection("events").doc(id).set(body);
+    else await db.collection("events").add(body);
+  } catch (err) { handleWriteError(err); }
+});
+$("delBtn").addEventListener("click", async () => {
+  const b = $("delBtn");
+  if (!b.dataset.armed) { b.dataset.armed = "1"; b.textContent = "Точно удалить?"; return; }
+  const id = editingId; closeDialog();
+  if (!db) { events = events.filter((x) => x.id !== id); renderPoster(); return; }
+  try { await db.collection("events").doc(id).delete(); } catch (err) { handleWriteError(err); }
+});
+function handleWriteError(err) {
+  if (err && err.code === "invalid_argument") { canWrite = false; setStatus("Только просмотр: изменения не сохраняются", true); }
+  else if (err && err.code === "quota_exceeded") setStatus("Хранилище заполнено: удалите старые события", true);
+  else setStatus("Не удалось сохранить. Попробуйте ещё раз", true);
+}
+
+// Method panel
+function buildMethod() {
+  $("advList").innerHTML = plan.adventures.map((a, i) => `
+    <div class="adv" data-i="${i}">
+      <input type="checkbox" id="adv_done_${i}" aria-label="Сделано">
+      <input type="text" id="adv_title_${i}" placeholder="Приключение ${i + 1}">
+      <select id="adv_month_${i}" aria-label="Месяц"><option value="">месяц</option>${MONTHS.map((m) => `<option>${m}</option>`).join("")}</select>
+    </div>`).join("");
+  $("habitList").innerHTML = [0, 1, 2, 3].map((q) => `<div class="q"><span>Q${q + 1}</span><input type="text" id="habit_${q}" placeholder="Привычка квартала"></div>`).join("");
+  $("scoreList").innerHTML = SCORE_AREAS.map(([k, n]) => `<div class="score"><label for="score_${k}">${n}</label><input type="range" min="1" max="10" id="score_${k}"><output id="score_${k}_o"></output></div>`).join("");
+}
+function fillMethod() {
+  const keep = (id, v, prop = "value") => { const el = $(id); if (el && document.activeElement !== el) el[prop] = v; };
+  keep("m_family", plan.misogi.family); keep("m_a1", plan.misogi.a1); keep("m_a2", plan.misogi.a2);
+  $("m_a1_l").firstChild.textContent = plan.names.a1 || "Взрослый 1";
+  $("m_a2_l").firstChild.textContent = plan.names.a2 || "Взрослый 2";
+  ["a1", "a2", "k1", "k2"].forEach((k) => keep("n_" + k, plan.names[k]));
+  plan.adventures.forEach((a, i) => {
+    keep(`adv_title_${i}`, a.title); keep(`adv_month_${i}`, a.month); keep(`adv_done_${i}`, a.done, "checked");
+    document.querySelector(`.adv[data-i="${i}"]`).classList.toggle("done", !!a.done);
+  });
+  plan.habits.forEach((h, q) => keep(`habit_${q}`, h));
+  SCORE_AREAS.forEach(([k]) => { keep(`score_${k}`, plan.scores[k]); $(`score_${k}_o`).textContent = plan.scores[k]; });
+  const low = [...SCORE_AREAS].sort((a, b) => plan.scores[a[0]] - plan.scores[b[0]]).slice(0, 2).map((x) => x[1].toLowerCase());
+  $("lowest").textContent = `Фокус 2027: ${low.join(" и ")}.`;
+}
+function readMethod() {
+  plan.misogi = { family: $("m_family").value, a1: $("m_a1").value, a2: $("m_a2").value };
+  plan.names = { a1: $("n_a1").value, a2: $("n_a2").value, k1: $("n_k1").value, k2: $("n_k2").value };
+  plan.adventures = plan.adventures.map((_, i) => ({ title: $(`adv_title_${i}`).value, month: $(`adv_month_${i}`).value, done: $(`adv_done_${i}`).checked }));
+  plan.habits = [0, 1, 2, 3].map((q) => $(`habit_${q}`).value);
+  SCORE_AREAS.forEach(([k]) => (plan.scores[k] = +$(`score_${k}`).value));
+}
+let saveTimer = null, saving = false, dirty = false;
+function scheduleSave() {
+  readMethod(); fillMethod();
+  dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flushPlan, 700);
+}
+async function flushPlan() {
+  if (!db || !canWrite || saving || !dirty) return;
+  saving = true; dirty = false;
+  try { await db.doc("plan/main").set(structuredClone(plan)); setStatus("Сохранено"); }
+  catch (err) { handleWriteError(err); }
+  saving = false;
+  if (dirty) flushPlan();
+}
+buildMethod(); fillMethod(); renderPoster();
+document.querySelector(".method").addEventListener("input", scheduleSave);
+document.querySelector(".method").addEventListener("change", scheduleSave);
+
+// Shared store
+(async () => {
+  try {
+    db = await claude.use("db");
+  } catch { db = null; }
+  if (!db) { setStatus("Общее хранилище недоступно: изменения видны только вам и пропадут после перезагрузки", true); return; }
+  try {
+    const user = await claude.use("user");
+    const w = user ? await user.can("data.write") : null;
+    if (w === false) { canWrite = false; setStatus("Только просмотр"); }
+  } catch {}
+  if (canWrite) setStatus("Общий календарь: изменения сразу видны всей семье");
+  db.collection("events").onSnapshot((snap) => {
+    events = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((e) => e.start && e.end);
+    renderPoster();
+  }, () => setStatus("Связь с календарём потеряна. Обновите страницу", true));
+  db.doc("plan/main").onSnapshot((snap) => {
+    if (!snap.exists || dirty || saving) return;
+    const d = snap.data();
+    plan = { ...structuredClone(DEFAULT_PLAN), ...structuredClone(d) };
+    fillMethod();
+  }, () => {});
+})();
+</script>
+
+</body></html>
